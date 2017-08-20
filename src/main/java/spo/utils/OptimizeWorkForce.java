@@ -4,17 +4,22 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import spo.domain.Junior;
 
-public class OptimizeWorkForce {
+@Component("optimizeWorkForce")
+public class OptimizeWorkForce implements AbstractOptimization {
 	private static final int MINIMUN_ACCEPTABLE_DIFFERENCE = -1;
 	private static final int MINUS_ONE_JUNIOR = -1;
-	private static HashMap<String, Integer> optimizationResult = new HashMap<String, Integer>();
+	private HashMap<String, Integer> optimizationResult;
 	private static final String SENIOR_KEY = "Senior";
 	private static final String JUNIOR_KEY = "Junior";
-
-	public static Map optimize(int capacity, int seniorWorkForce, int juniorWorkForce) {
-		if (capacity > seniorWorkForce) {
+	
+	@Override
+	public Map optimze(int capacity, int seniorWorkForce, int juniorWorkForce) {
+		optimizationResult= new HashMap<String, Integer>();
+		if (capacity >= seniorWorkForce) {
 			optimizationResult.put(SENIOR_KEY, capacity / seniorWorkForce);
 
 			optimizationResult.put(JUNIOR_KEY, 0);
@@ -28,7 +33,7 @@ public class OptimizeWorkForce {
 		return optimizationResult;
 	}
 
-	private static void calculateRestToOptimize(int restToFill, int seniorWorkForce, int juniorWorkForce,
+	private void calculateRestToOptimize(int restToFill, int seniorWorkForce, int juniorWorkForce,
 			int totalOfCapacity) {
 		int offSet = restToFill - juniorWorkForce;
 
@@ -68,18 +73,18 @@ public class OptimizeWorkForce {
 		}
 	}
 
-	private static int addSeniorAndRetrieveTotal(int juniorWorkForce, int seniorWorkForce, int totalOfCapacity) {
+	private int addSeniorAndRetrieveTotal(int juniorWorkForce, int seniorWorkForce, int totalOfCapacity) {
 		int totalInMapWithSeniorAdded = sumInMap(optimizationResult, juniorWorkForce, seniorWorkForce, 1,
 				optimizationResult.get(JUNIOR_KEY) == 0 ? 0 : MINUS_ONE_JUNIOR);
 		return totalInMapWithSeniorAdded - totalOfCapacity;
 	}
 
-	private static int addJuniorAndRetrieveTotal(int juniorWorkForce, int seniorWorkForce, int totalOfCapacity) {
+	private int addJuniorAndRetrieveTotal(int juniorWorkForce, int seniorWorkForce, int totalOfCapacity) {
 		int totalInMapWhitJuniorAdded = sumInMap(optimizationResult, juniorWorkForce, seniorWorkForce, 0, 1);
 		return totalInMapWhitJuniorAdded - totalOfCapacity;
 	}
 
-	private static int sumInMap(Map<String, Integer> optimizationMap, int juniorWorkForce, int seniorWorkForce,
+	private int sumInMap(Map<String, Integer> optimizationMap, int juniorWorkForce, int seniorWorkForce,
 			int incrementToOptimizeSenior, int incrementToOptimizeJunior) {
 
 		int sumSenior = ((optimizationMap.get(SENIOR_KEY) + incrementToOptimizeSenior) * seniorWorkForce);
@@ -89,7 +94,7 @@ public class OptimizeWorkForce {
 		return sumJunior + sumSenior;
 	}
 
-	public static void main(String args[]) {
+	/*public static void main(String args[]) {
 		// int[] i = { 2 };
 		int a = 10;
 		int b = 6;
@@ -103,7 +108,7 @@ public class OptimizeWorkForce {
 		int diffMoreThanSix = 0;
 		for (int i = 1; i < 100; i++) {
 			int currentCapacity = i;
-			OptimizeWorkForce.optimize(currentCapacity, a, b);
+			//OptimizeWorkForce.optimize(currentCapacity, a, b);
 
 			int sumSenior = optimizationResult.get(SENIOR_KEY) * a;
 			int sumJunior = optimizationResult.get(JUNIOR_KEY) * b;
@@ -155,5 +160,6 @@ public class OptimizeWorkForce {
 		System.out.println(diffToFive);
 		System.out.println(diffMoreThanSix);
 
-	}
+	}*/
+
 }
